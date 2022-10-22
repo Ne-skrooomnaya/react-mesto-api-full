@@ -1,0 +1,25 @@
+.element__delete {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 18px;
+    height: 19px;
+    background: url('../../../images/Group.svg') center no-repeat;
+    border: none;
+    cursor: pointer;
+    z-index: 1;
+    cursor: pointer;
+    transition: opacity 0.2s linear;
+}
+  
+  .element__delete:hover {
+    opacity: .6;
+  }
+  
+  .element__delete_visible {
+    visibility: visible;
+  }
+  
+  .element_delete_hidden {
+    visibility: hidden;
+  }

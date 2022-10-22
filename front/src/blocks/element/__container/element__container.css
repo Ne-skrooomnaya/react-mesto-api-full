@@ -1,0 +1,10 @@
+.element__container {
+    display: flex;
+    position: relative;
+    height: 367px;
+	flex-direction: column;
+    background-color: #fff;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px 10px 10px 10px;
+}
