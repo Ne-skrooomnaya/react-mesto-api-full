@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-/* eslint-disable import/no-unresolved */
 const Card = require('../models/Card');
 
 const { ErrorBad } = require('../utils/ErrorBad');

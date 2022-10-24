@@ -1,28 +1,24 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const { errors } = require('celebrate');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const auth = require('./middlewares/auth');
+const mongoose = require('mongoose');
+const { errors } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const SignRoutes = require('./routes/sign');
+const auth = require('./middlewares/auth');
 const UserRoutes = require('./routes/users');
 const CardRoutes = require('./routes/cards');
 const { ErrorNot } = require('./utils/ErrorNot');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
-  useNewUrlParser: true,
-  // useCreateIndex: true,
-  // useFindAndModify: false,
-  useUnifiedTopology: true,
-})
+mongoose.connect('mongodb://localhost:27017/mestodb')
   .then(() => console.log('connected'))
   .catch((err) => console.log(`Ошибка ${err.name}: ${err.message}`));
 
@@ -31,7 +27,13 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cookieParser());
+app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.use('/', SignRoutes);
 app.use('/', auth, UserRoutes);
@@ -40,12 +42,18 @@ app.use('*', auth, (req, res, next) => {
   next(new ErrorNot('Страница не найдена 5'));
 });
 
+app.use(errorLogger); // подключаем логгер ошибок
+
 app.use(errors());
 
 app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  const message = statusCode === 500 ? 'Ошибка на сервере 3' : err.message;
-  res.status(statusCode).send({ message });
+  const { statusCode = 500, message } = err;
+  res.status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'На сервере произошла ошибка'
+        : message,
+    });
   next();
 });
 

@@ -1,5 +1,4 @@
-/* eslint-disable consistent-return */
-/* eslint-disable import/no-unresolved */
+const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
@@ -67,42 +66,52 @@ const getUserId = async (req, res, next) => {
 const updateUserInfo = async (req, res, next) => {
   const { name, about } = req.body;
   const owner = req.user._id;
-  try {
-    const user = await User.findByIdAndUpdate(
-      owner,
-      { name, about },
-      { new: true, runValidators: true },
-    );
-    if (!user) {
-      return next(new ErrorNot('Такого пользователя не существует 1'));
-    }
-    res.send(user);
-  } catch (err) {
-    if (err.name === 'ValidationError') {
-      return next(new ErrorBad('Ошибка валидации'));
-    }
-    return next(new ErrorServer('Ошибка на сервере'));
-  }
+  User.findByIdAndUpdate(
+    owner,
+    { name, about },
+    { new: true, runValidators: true },
+  )
+    .then((user) => {
+      if (user) {
+        res.send(user);
+        return;
+      }
+      next(new ErrorNot('Такого пользователя не существует 1'));
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return next(new ErrorBad('Ошибка валидации'));
+      }
+      if (err.name === 'CastError') {
+        return next(new ErrorBad('Ошибка валидации id'));
+      }
+      return next(new ErrorServer('Ошибка на сервере'));
+    });
 };
 
 const updateUserAvatar = async (req, res, next) => {
   const { avatar } = req.body;
-  try {
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { avatar },
-      { new: true, runValidators: true },
-    );
-    if (!user) {
-      return next(new ErrorNot('Такого пользователя не существует 1'));
-    }
-    res.send(user);
-  } catch (err) {
-    if (err.name === 'ValidationError') {
-      return next(new ErrorBad('Ошибка валидации'));
-    }
-    return next(new ErrorServer('Ошибка на сервере'));
-  }
+  User.findByIdAndUpdate(
+    req.user._id,
+    { avatar },
+    { new: true, runValidators: true },
+  )
+    .then((user) => {
+      if (user) {
+        res.send(user);
+        return;
+      }
+      next(new ErrorNot('Такого пользователя не существует 1'));
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return next(new ErrorBad('Ошибка валидации'));
+      }
+      if (err.name === 'CastError') {
+        return next(new ErrorBad('Ошибка валидации id'));
+      }
+      return next(new ErrorServer('Ошибка на сервере'));
+    });
 };
 
 const getUserInfo = async (req, res, next) => {
@@ -133,7 +142,7 @@ const login = async (req, res, next) => {
 
     const token = jwt.sign(
       { _id: user._id },
-      'secret-key',
+      NODE_ENV === 'production' ? JWT_SECRET : 'secret-key',
       { expiresIn: '7d' },
     );
     res.cookie('jwt', token, {

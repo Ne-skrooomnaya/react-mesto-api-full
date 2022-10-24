@@ -4,6 +4,14 @@ class Api {
     this._headers = config.headers;
   }
 
+  setToken(token) {
+    this._token = token;
+    this._headers = {
+      ...this._headers,
+      'authorization': `Bearer ${token}`
+    }
+  }
+
   _checkResponse(res) {
     if (res.ok) {
       return res.json();
@@ -72,10 +80,13 @@ class Api {
   }
 }
 
+let token = localStorage.getItem('jwt');
+
 const api = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-43/',
+  // baseUrl: 'https://api.angel.nomoredomains.icu/',
+  baseUrl: 'http://localhost:3001/',
   headers: {
-    authorization: '0e5254a8-ef3a-48e3-8585-0243a3225307',
+    'authorization': `Bearer ${token}`,
     'Content-Type': 'application/json',
   },
 });
