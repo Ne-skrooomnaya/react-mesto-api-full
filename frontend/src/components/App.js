@@ -46,43 +46,6 @@ function App() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    api.getUserInfo()
-      .then((response) => {
-        setCurrentUser(response);
-      })
-      .catch((err) => {
-        alert(err);
-      });
-
-    api.getCards()
-      .then((response) => {
-        setCards(response.reverse());
-      })
-      .catch((err) => {
-        alert(err);
-      });
-  }, []);
-
-
-  // nn
-  useEffect(() => {
-    tokenCheck();
-  }, [loggedIn])
-
-  useEffect(() => {
-    if (loggedIn) {
-      navigate("/");
-      return;
-    }
-  }, [loggedIn, navigate]);
-
-
-
-
-
-  // nnm
-
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
   }
@@ -132,6 +95,18 @@ function App() {
       });
   }
 
+  const handleAddPlaceSubmit = (newCard,) => {
+    api.postCard(newCard)
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  }
+
+
   const handleCardLike = (card) => {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
     api.changeLikeCardStatus(card._id, isLiked).then((newCard) => {
@@ -153,18 +128,13 @@ function App() {
       });
   }
 
-  const handleAddPlaceSubmit = (newCard,) => {
-    api.postCard(newCard)
-      .then((newCard) => {
-        setCards([newCard, ...cards]);
-        closeAllPopups();
-      })
-      .catch((err) => {
-        alert(err);
-      });
+  const handleLogout = () => {
+    localStorage.removeItem('jwt');
+    navigate.push('/signin');
+    setCurrentUser({});
+    setLoggedIn(false);
   }
 
-  // nn
   const handleRegister = ({ password, email }) => {
     auth.register({ password, email })
       .then((res) => {
@@ -176,7 +146,7 @@ function App() {
       .catch((err) => {
         console.log(err);
         setInfoTooltipOpen({ opened: true, success: false });
-      })
+      });
         // .finally(()=> setInfoTooltipOpen.open());
   }
 
@@ -198,38 +168,20 @@ function App() {
       })
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('jwt');
-    navigate.push('/signin');
-    setCurrentUser({});
-    setLoggedIn(false);
-  }
-
-  // function handleSignOut() {
-  //   localStorage.removeItem('jwt');
-  //   navigate.push('/signin');
-  //   setCurrentUser({});
-  //   setLoggedIn(false);
-  // }
-
-  const tokenCheck = () => {
-    const token = localStorage.getItem('jwt');
-    if (token) {
-      auth.checkToken(token)
-      .then((res) => {
-        console.log(res);
-        if (res) {
-          setLoggedIn(true);
-        }
-      })
-      .catch((err) => {console.log(`Ошибка: ${err}`)});
+  const checkToken = () => {
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      auth.checkToken(jwt).then((res) => {
+          if (res.email) {
+            setLoggedIn(true);
+            setUserEmail(res.email);
+          };
+      }).catch((err) => console.log(err));
     }
-  }
-  // nnm
-
+  };
 
   useEffect(() => {
-    tokenCheck();
+    checkToken();
   }, []);
 
   useEffect(()=>{
