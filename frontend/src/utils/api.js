@@ -1,9 +1,12 @@
 class Api {
-  constructor(config) {
-    this._baseUrl = config.baseUrl;
-    this._headers = config.headers;
+  constructor({baseUrl, headers}) {
+    this._baseUrl = baseUrl;
+    this._headers = headers;
+    this._token = null;
+
   }
 
+  //Установка токена
   setToken(token) {
     this._token = token;
     this._headers = {
@@ -78,18 +81,25 @@ class Api {
     })
       .then(this._checkResponse)
   }
+  
+// Общий промис для отрисовки страницы
+  getPromiseAll() {
+    return Promise.all([
+      this.getCards(),
+      this.getUserInfo()
+    ])
+  }
 }
 
-let token = localStorage.getItem('jwt');
+let token = localStorage.getItem("jwt");
 
 const api = new Api({
-  // baseUrl: 'https://api.angel.nomoredomains.icu/',
+  // url: 'https://api.angel.nomorepartiesxyz.ru',!!!!!
   baseUrl: 'http://localhost:3001/',
   headers: {
-    'authorization': `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  },
+    authorization:  `Bearer ${token}`,
+    'content-type': 'application/json'
+  }
 });
-
 
 export default api;

@@ -1,4 +1,3 @@
-const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
@@ -8,6 +7,8 @@ const { ErrorConflict } = require('../utils/ErrorConflict');
 const { ErrorNot } = require('../utils/ErrorNot');
 const { ErrorServer } = require('../utils/ErrorServer');
 const { ErrorUnauthorized } = require('../utils/ErrorUnauthorized');
+
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const getUsers = async (req, res, next) => {
   try {
@@ -66,52 +67,44 @@ const getUserId = async (req, res, next) => {
 const updateUserInfo = async (req, res, next) => {
   const { name, about } = req.body;
   const owner = req.user._id;
-  User.findByIdAndUpdate(
-    owner,
-    { name, about },
-    { new: true, runValidators: true },
-  )
-    .then((user) => {
-      if (user) {
-        res.send(user);
-        return;
-      }
-      next(new ErrorNot('Такого пользователя не существует 1'));
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return next(new ErrorBad('Ошибка валидации'));
-      }
-      if (err.name === 'CastError') {
-        return next(new ErrorBad('Ошибка валидации id'));
-      }
-      return next(new ErrorServer('Ошибка на сервере'));
-    });
+  try {
+    const user = await User.findByIdAndUpdate(
+      owner,
+      { name, about },
+      { new: true, runValidators: true },
+    );
+    if (!user) {
+      return next(new ErrorNot('Такого пользователя не существует 1'));
+    }
+    res.send(user);
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      return next(new ErrorBad('Ошибка валидации'));
+    }
+    return next(new ErrorServer('Ошибка на сервере'));
+  }
+  return null;
 };
 
 const updateUserAvatar = async (req, res, next) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(
-    req.user._id,
-    { avatar },
-    { new: true, runValidators: true },
-  )
-    .then((user) => {
-      if (user) {
-        res.send(user);
-        return;
-      }
-      next(new ErrorNot('Такого пользователя не существует 1'));
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return next(new ErrorBad('Ошибка валидации'));
-      }
-      if (err.name === 'CastError') {
-        return next(new ErrorBad('Ошибка валидации id'));
-      }
-      return next(new ErrorServer('Ошибка на сервере'));
-    });
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { avatar },
+      { new: true, runValidators: true },
+    );
+    if (!user) {
+      return next(new ErrorNot('Такого пользователя не существует 1'));
+    }
+    res.send(user);
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      return next(new ErrorBad('Ошибка валидации'));
+    }
+    return next(new ErrorServer('Ошибка на сервере'));
+  }
+  return null;
 };
 
 const getUserInfo = async (req, res, next) => {
@@ -147,8 +140,17 @@ const login = async (req, res, next) => {
     );
     res.cookie('jwt', token, {
       maxAge: 3600000,
+      domain: 'angel.nomoredomains.icu',
       httpOnly: true,
-      sameSite: true,
+      sameSite: 'none',
+      secure: true,
+    });
+    res.cookie('jwt', token, {
+      maxAge: 3600000,
+      domain: 'api.angel.nomoredomains.icu',
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
     });
     return res.status(200).send({ token });
   } catch (error) {

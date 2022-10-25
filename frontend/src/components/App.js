@@ -25,7 +25,7 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 import { Route, useNavigate, Routes, Navigate } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
-import auth from '../utils/auth';
+import * as auth from '../utils/auth.js';
 
 function App() {
 
@@ -166,51 +166,86 @@ function App() {
 
   // nn
   const handleRegister = ({ password, email }) => {
-    return auth.register({ password, email })
-      .then(() => {
+    auth.register({ password, email })
+      .then((res) => {
+        console.log(res);
+        console.log(res.data.email);
         setInfoTooltipOpen({ opened: true, success: true });
-        navigate('/signin');
+        navigate.push('/signin');
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         setInfoTooltipOpen({ opened: true, success: false });
-      });
+      })
+        // .finally(()=> setInfoTooltipOpen.open());
   }
 
   const handleLogin = ({ password, email }) => {
-    return auth.login({ password, email })
+    auth.login({ password, email })
       .then((res) => {
-        localStorage.setItem('token', res.token);
-        tokenCheck();
-        setLoggedIn(true);
-        navigate('/');
-      })
-      .catch(() => {
-        setInfoTooltipOpen({ opened: true, success: false });
-      });
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setLoggedIn(false);
-  }
-
-  const tokenCheck = () => {
-    if (localStorage.getItem('token')) {
-      const token = localStorage.getItem('token');
-      auth.checkToken(token).then((res) => {
-        if (res) {
-          setUserEmail(res.data.email);
+        if (res.token) {
+          console.log(res);
+          console.log(userEmail.email);
+          api.setToken(res.token);
+          localStorage.setItem('jwt', res.token);
           setLoggedIn(true);
         }
       }).catch((err) => {
         console.log(err);
-      });
+        setLoggedIn(false);
+        setInfoTooltipOpen(failImage);
+        setInfoTooltipOpen({ opened: true, success: false });
+      })
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('jwt');
+    navigate.push('/signin');
+    setCurrentUser({});
+    setLoggedIn(false);
+  }
+
+  // function handleSignOut() {
+  //   localStorage.removeItem('jwt');
+  //   navigate.push('/signin');
+  //   setCurrentUser({});
+  //   setLoggedIn(false);
+  // }
+
+  const tokenCheck = () => {
+    const token = localStorage.getItem('jwt');
+    if (token) {
+      auth.checkToken(token)
+      .then((res) => {
+        console.log(res);
+        if (res) {
+          setLoggedIn(true);
+        }
+      })
+      .catch((err) => {console.log(`Ошибка: ${err}`)});
     }
   }
   // nnm
 
 
+  useEffect(() => {
+    tokenCheck();
+  }, []);
 
+  useEffect(()=>{
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getCards()])
+      .then(([userInfo, cards]) => {
+        setCurrentUser(userInfo.user);
+        setCards(cards.data);
+        setUserEmail(userInfo.user.email)
+        navigate.push('/');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+  }, [loggedIn, navigate]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -218,9 +253,9 @@ function App() {
         <div className="page">
           <Header logo={logo} email={userEmail} loggedIn={loggedIn} handleLogout={handleLogout} />
           <Routes>
-            <Route path="/signup" element={<Register handleRegister={handleRegister} />} />
-            <Route path="/signin" element={<Login handleLogin={handleLogin} />} />
-            <Route path="/" element={<ProtectedRoute
+            <Route exact path="/signup" element={<Register handleRegister={handleRegister} />} />
+            <Route exact path="/signin" element={<Login handleLogin={handleLogin} />} />
+            <Route exact path="/" element={<ProtectedRoute
               loggedIn={loggedIn}
               component={Main}
               onEditProfile={handleEditProfileClick}
@@ -233,7 +268,7 @@ function App() {
             />
             } />
             <Route
-              path="*"
+              exact path="*"
               element={
                 loggedIn ? <Navigate to="/" /> : <Navigate to="/signin" />
               }
