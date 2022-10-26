@@ -135,38 +135,35 @@ function App() {
     setLoggedIn(false);
   }
 
-  const handleRegister = ({ password, email }) => {
-    auth.register({ password, email })
-      .then((res) => {
-        console.log(res);
-        console.log(res.data.email);
+  const handleRegister = (email, password) => {
+    auth.register({ email, password }).then((data) => {
+        if (data.email) {
+          localStorage.setItem("jwt", data.token);
+          setUserEmail(email);
+        }
         setInfoTooltipOpen({ opened: true, success: true });
-        navigate.push('/signin');
+        navigate.push("/signin");
+      })
+      .catch((err) => {
+        console.log(err);
+        setInfoTooltipOpen({ opened: true, success: true });
+      });
+  };
+
+  const handleLogin = (email, password) => {
+    auth.login({ email, password }).then((res) => {
+        if (res.token) {
+          localStorage.setItem("jwt", res.token);
+          api.setToken(res.token);
+        }
+        setLoggedIn(true);
+        setUserEmail(email);
       })
       .catch((err) => {
         console.log(err);
         setInfoTooltipOpen({ opened: true, success: false });
       });
-        // .finally(()=> setInfoTooltipOpen.open());
-  }
-
-  const handleLogin = ({ password, email }) => {
-    auth.login({ password, email })
-      .then((res) => {
-        if (res.token) {
-          console.log(res);
-          console.log(userEmail.email);
-          api.setToken(res.token);
-          localStorage.setItem('jwt', res.token);
-          setLoggedIn(true);
-        }
-      }).catch((err) => {
-        console.log(err);
-        setLoggedIn(false);
-        setInfoTooltipOpen(failImage);
-        setInfoTooltipOpen({ opened: true, success: false });
-      })
-  }
+  };
 
   const checkToken = () => {
     const jwt = localStorage.getItem("jwt");
