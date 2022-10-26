@@ -5,7 +5,7 @@ const { ErrorUnauthorized } = require('../utils/ErrorUnauthorized');
 const auth = (req, res, next) => {
   const { authorization } = req.headers;
 
-  const token = authorization.replace('Bearer', '');
+  const token = authorization.replace('Bearer ', '');
   let payload;
 
   try {

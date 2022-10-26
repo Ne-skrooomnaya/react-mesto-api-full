@@ -95,7 +95,7 @@ let token = localStorage.getItem("jwt");
 
 const api = new Api({
   // url: 'https://api.angel.nomorepartiesxyz.ru',!!!!!
-  baseUrl: 'http://localhost:3001/',
+  baseUrl: 'http://localhost:3000/',
   headers: {
     authorization:  `Bearer ${token}`,
     'content-type': 'application/json'

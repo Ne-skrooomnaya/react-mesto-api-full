@@ -130,7 +130,7 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem('jwt');
-    navigate.push('/signin');
+    navigate('/signin');
     setCurrentUser({});
     setLoggedIn(false);
   }
@@ -188,7 +188,7 @@ function App() {
         setCurrentUser(userInfo.user);
         setCards(cards.data);
         setUserEmail(userInfo.user.email)
-        navigate.push('/');
+        navigate('/');
       })
       .catch((err) => {
         console.log(err);
