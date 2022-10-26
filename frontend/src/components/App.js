@@ -130,7 +130,7 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem('jwt');
-    navigate('/signin');
+    navigate.push('/signup');
     setCurrentUser({});
     setLoggedIn(false);
   }
@@ -150,14 +150,15 @@ function App() {
       });
   };
 
-  const handleLogin = (email, password) => {
-    auth.login({ email, password }).then((res) => {
+  const handleLogin = ({ password, email }) => {
+    auth.login({ password, email }).then((res) => {
         if (res.token) {
           localStorage.setItem("jwt", res.token);
           api.setToken(res.token);
         }
         setLoggedIn(true);
         setUserEmail(email);
+        navigate.push("/signup");
       })
       .catch((err) => {
         console.log(err);
@@ -188,7 +189,7 @@ function App() {
         setCurrentUser(userInfo.user);
         setCards(cards.data);
         setUserEmail(userInfo.user.email)
-        navigate('/');
+        navigate.push('/');
       })
       .catch((err) => {
         console.log(err);
