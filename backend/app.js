@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -40,12 +40,12 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use(cookieParser());
+// app.use(cookieParser());
 
 app.use('/', SignRoutes);
 app.use('/', auth, UserRoutes);
 app.use('/', auth, CardRoutes);
-app.use('/', auth, (req, res, next) => {
+app.use('*', auth, (req, res, next) => {
   next(new ErrorNot('Страница не найдена 5'));
 });
 

@@ -122,7 +122,6 @@ const getUserInfo = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
-
   try {
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
@@ -138,13 +137,13 @@ const login = async (req, res, next) => {
       NODE_ENV === 'production' ? JWT_SECRET : 'secret-key',
       { expiresIn: '7d' },
     );
-    res.cookie('jwt', token, {
-      maxAge: 3600000,
-      // domain: 'angel.nomoredomains.icu',
-      httpOnly: true,
-      sameSite: 'none',
-      secure: true,
-    });
+    // res.cookie('jwt', token, {
+    //   maxAge: 3600000,
+    //   // domain: 'angel.nomoredomains.icu',
+    //   httpOnly: true,
+    //   sameSite: 'none',
+    //   secure: true,
+    // });
     // res.cookie('jwt', token, {
     //   maxAge: 3600000,
     //   // domain: 'api.angel.nomoredomains.icu',
