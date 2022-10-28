@@ -46,6 +46,82 @@ function App() {
 
   const navigate = useNavigate();
 
+  // nn
+  useEffect(() => {
+    checkToken();
+  }, [])
+
+  useEffect(() => {
+    if (loggedIn) {
+      navigate("/");
+    }
+  }, [loggedIn, navigate]);
+
+  useEffect(() => {
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getCards()])
+      .then(([userData, userCard]) => {
+        setCurrentUser(userData);
+        setCards(userCard);
+      }).catch((err) => console.log(`Ошибка: ${err}`));
+    }
+  }, [loggedIn]);
+
+  const checkToken = () => {
+    const token = localStorage.getItem('jwt');
+    if (token) {
+      auth.checkToken(token).then((res) => {
+        if (res.email) {
+          setUserEmail(res.email);
+          setLoggedIn(true);
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
+
+  const handleRegister = ({ password, email }) => {
+    return auth.register({ password, email })
+      .then((data) => {
+        if (data.email) {
+          localStorage.setItem('jwt', data.token);
+          setUserEmail(email);
+        }
+        setInfoTooltipOpen({ opened: true, success: true });
+        navigate('/signin');
+      })
+      .catch((err) => {
+        console.log(err);
+        setInfoTooltipOpen({ opened: true, success: false });
+      });
+  }
+
+  const handleLogin = ({ password, email }) => {
+    return auth.login({ password, email })
+      .then((res) => {
+        if (res.token) {
+          api.setToken(res.token);
+          localStorage.setItem('jwt', res.token);
+          tokenCheck();
+          navigate('/');
+        }
+        setLoggedIn(true);
+        setUserEmail(email);
+      })
+      .catch((err) => {
+        console.log(err);
+        setInfoTooltipOpen({ opened: true, success: false });
+      });
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('jwt');
+    navigate("/signin");
+    setCurrentUser({});
+    setLoggedIn(false);
+  }
+
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
   }
@@ -59,10 +135,48 @@ function App() {
   }
 
   const handleCardClick = (card) => {
-    setSelectedCard({ name: '', link: '' });
-    setIsImagePopupOpen(true);
     setSelectedCard(card);
   }
+
+  const handleCardLike = (card) => {
+    const isLiked = card.likes.some(i => i === currentUser._id);
+    api.changeLikeCardStatus(props.card._id, !isLiked)
+    .then((newCard) => {
+      setCards((state) =>
+        state.map((c) => (c._id === props.card._id ? newCard.data : c))
+      );
+    }).catch((err) => console.log(err));
+  }
+
+  const handleCardDelete = (card) => {
+    api.deleteCard(props.card._id).then(() => {
+        setCards((state) => state.filter((c) => (c._id !== props.card._id)));
+      }).catch((err) => console.log(err));
+  }
+
+  const handleUpdateUser = (data) => {
+    api.editUserInfo(data).then((res) => {
+        setCurrentUser(res)
+        closeAllPopups();
+      }).catch((err) => console.log(err));
+  }
+
+  const handleUpdateAvatar = (data) => {
+    api.editUserAvatar(data)
+      .then((res) => {
+        setCurrentUser(res)
+        closeAllPopups();
+      }).catch((err) => console.log(err));
+  }
+
+  const handleAddPlaceSubmit = (data) => {
+    api.postCard(data).then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
+      }).catch((err) => console.log(err));
+  }
+
+  
 
   const closeAllPopups = () => {
     setIsEditProfilePopupOpen(false);
@@ -70,155 +184,36 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsImagePopupOpen(false);
     setInfoTooltipOpen({ opened: false, success: isInfoTooltipOpen.success })
+    setSelectedCard(null);
   }
-
-
-  const handleUpdateUser = ({ name, about }) => {
-    api.editUserInfo({ name, about })
-      .then(({ name, about }) => {
-        setCurrentUser({ ...currentUser, name, about })
-        closeAllPopups();
-      })
-      .catch((err) => {
-        alert(err);
-      });
-  }
-
-  const handleUpdateAvatar = ({ avatar }) => {
-    api.editUserAvatar({ avatar })
-      .then(({ avatar }) => {
-        setCurrentUser({ ...currentUser, avatar })
-        closeAllPopups();
-      })
-      .catch((err) => {
-        alert(err);
-      });
-  }
-
-  const handleAddPlaceSubmit = (newCard,) => {
-    api.postCard(newCard)
-      .then((newCard) => {
-        setCards([newCard, ...cards]);
-        closeAllPopups();
-      })
-      .catch((err) => {
-        alert(err);
-      });
-  }
-
-
-  const handleCardLike = (card) => {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
-    api.changeLikeCardStatus(card._id, isLiked).then((newCard) => {
-      setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-    })
-      .catch((err) => {
-        alert(err);
-      });
-
-  }
-
-  const handleCardDelete = (card) => {
-    api.deleteCard(card._id)
-      .then(() => {
-        setCards((state) => state.filter((c) => c._id !== card._id));
-      })
-      .catch((err) => {
-        alert(err);
-      });
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('jwt');
-    navigate.push('/signup');
-    setCurrentUser({});
-    setLoggedIn(false);
-  }
-
-  const handleRegister = (email, password) => {
-    auth.register({ email, password }).then((data) => {
-        if (data.email) {
-          localStorage.setItem("jwt", data.token);
-          setUserEmail(email);
-        }
-        setInfoTooltipOpen({ opened: true, success: true });
-        navigate.push("/signin");
-      })
-      .catch((err) => {
-        console.log(err);
-        setInfoTooltipOpen({ opened: true, success: true });
-      });
-  };
-
-  const handleLogin = ({ password, email }) => {
-    auth.login({ password, email }).then((res) => {
-        if (res.token) {
-          localStorage.setItem("jwt", res.token);
-          api.setToken(res.token);
-        }
-        setLoggedIn(true);
-        setUserEmail(email);
-        navigate.push("/signup");
-      })
-      .catch((err) => {
-        console.log(err);
-        setInfoTooltipOpen({ opened: true, success: false });
-      });
-  };
-
-  const checkToken = () => {
-    const jwt = localStorage.getItem("jwt");
-    if (jwt) {
-      auth.checkToken(jwt).then((res) => {
-          if (res.email) {
-            setLoggedIn(true);
-            setUserEmail(res.email);
-          };
-      }).catch((err) => console.log(err));
-    }
-  };
-
-  useEffect(() => {
-    checkToken();
-  }, []);
-
-  useEffect(()=>{
-    if (loggedIn) {
-      Promise.all([api.getUserInfo(), api.getCards()])
-      .then(([userInfo, cards]) => {
-        setCurrentUser(userInfo.user);
-        setCards(cards.data);
-        setUserEmail(userInfo.user.email)
-        navigate.push('/');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }
-  }, [loggedIn, navigate]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="body">
         <div className="page">
-          <Header logo={logo} email={userEmail} loggedIn={loggedIn} handleLogout={handleLogout} />
+          <Header 
+          logo={logo} 
+          email={userEmail} 
+          loggedIn={loggedIn} 
+          handleLogout={handleLogout} 
+          />
           <Routes>
-            <Route exact path="/signup" element={<Register handleRegister={handleRegister} />} />
-            <Route exact path="/signin" element={<Login handleLogin={handleLogin} />} />
-            <Route exact path="/" element={<ProtectedRoute
-              loggedIn={loggedIn}
+            <Route path="/signup" element={<Register handleRegister={handleRegister} />} />
+            <Route path="/signin" element={<Login handleLogin={handleLogin} />} />
+            <Route path="/" element={<ProtectedRoute
               component={Main}
+              cards={cards}
+              loggedIn={loggedIn}
               onEditProfile={handleEditProfileClick}
               onAddPlace={handleAddPlaceClick}
               onEditAvatar={handleEditAvatarClick}
               onCardClick={handleCardClick}
-              cards={cards}
               onCardLike={handleCardLike}
               onCardDelete={handleCardDelete}
             />
             } />
             <Route
-              exact path="*"
+              path="*"
               element={
                 loggedIn ? <Navigate to="/" /> : <Navigate to="/signin" />
               }

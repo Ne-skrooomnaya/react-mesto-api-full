@@ -2,7 +2,7 @@ class Api {
   constructor({baseUrl, headers}) {
     this._baseUrl = baseUrl;
     this._headers = headers;
-    this._token = null;
+    // this._token = null;
 
   }
 
@@ -24,7 +24,7 @@ class Api {
   }
 
   getUserInfo() {
-    return fetch(`${this._baseUrl}users/me/`, {
+    return fetch(`${this._baseUrl}users/me`, {
       method: 'GET',
       headers: this._headers
     })
@@ -32,33 +32,37 @@ class Api {
   }
 
   editUserInfo(data) {
-    return fetch(`${this._baseUrl}users/me/`, {
+    return fetch(`${this._baseUrl}users/me`, {
       method: 'PATCH',
       headers: this._headers,
-      body: JSON.stringify(data)
+      body: JSON.stringify({
+        name: data.name,
+        about: data.about
+    }),
     })
       .then(this._checkResponse)
   }
 
-  editUserAvatar(newAvatarUrl) {
-    return fetch(`${this._baseUrl}users/me/avatar/`, {
+  editUserAvatar(data) {
+    return fetch(`${this._baseUrl}users/me/avatar`, {
       method: 'PATCH',
       headers: this._headers,
-      body: JSON.stringify(newAvatarUrl)
-    })
+      body: JSON.stringify({
+        avatar: data.avatar})
+})
       .then(this._checkResponse)
   }
 
   getCards() {
-    return fetch(`${this._baseUrl}cards/`, {
+    return fetch(`${this._baseUrl}cards`, {
       method: 'GET',
-      headers: this._headers
+      headers: this._headers,
     })
       .then(this._checkResponse)
   }
 
   postCard(data) {
-    return fetch(`${this._baseUrl}cards/`, {
+    return fetch(`${this._baseUrl}cards`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify(data)
@@ -80,15 +84,15 @@ class Api {
       headers: this._headers
     })
       .then(this._checkResponse)
-  }
-  
-// Общий промис для отрисовки страницы
-  getPromiseAll() {
-    return Promise.all([
-      this.getCards(),
-      this.getUserInfo()
-    ])
-  }
+    }
+
+// // Общий промис для отрисовки страницы
+//   getPromiseAll() {
+//     return Promise.all([
+//       this.getCards(),
+//       this.getUserInfo()
+//     ])
+//   }
 }
 
 let token = localStorage.getItem("jwt");

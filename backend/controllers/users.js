@@ -137,13 +137,14 @@ const login = async (req, res, next) => {
       NODE_ENV === 'production' ? JWT_SECRET : 'secret-key',
       { expiresIn: '7d' },
     );
-    // res.cookie('jwt', token, {
-    //   maxAge: 3600000,
-    //   // domain: 'angel.nomoredomains.icu',
-    //   httpOnly: true,
-    //   sameSite: 'none',
-    //   secure: true,
-    // });
+    res.cookie('jwt', token, {
+      maxAge: 3600000,
+      // domain: 'angel.nomoredomains.icu',
+      domain: 'http://localhost:3001',
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
     // res.cookie('jwt', token, {
     //   maxAge: 3600000,
     //   // domain: 'api.angel.nomoredomains.icu',
