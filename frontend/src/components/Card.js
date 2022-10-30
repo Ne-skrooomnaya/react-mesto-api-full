@@ -5,21 +5,21 @@ const Card = ({ card, onCardClick, onCardLike, onCardDelete }) => {
   const currentUser = React.useContext(CurrentUserContext);
   const { name, link, likes, owner } = card;
   const isOwn = owner === currentUser._id;
-  const isLiked = likes.some(i => i === currentUser._id);
-
   const cardDeleteButtonClassName = `element__delete ${isOwn ? '' : 'element__delete_hidden'}`;
 
+
+  const isLiked = likes.some(i => i === currentUser._id);
   const cardLikeButtonClassName = `element__like ${isLiked ? 'element__like_active' : ''}`;
 
-  function handleClick() {
+  const handleClick = () => {
     onCardClick(card);
   }
 
-  function handleLikeClick() {
+  const handleLikeClick = () => {
     onCardLike(card);
   }
 
-  function handleDeleteClick() {
+  const handleDeleteClick = () => {
     onCardDelete(card);
   }
 
