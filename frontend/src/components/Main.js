@@ -1,8 +1,8 @@
 import React from 'react';
-import Card from "./Card";
+import Card from './Card';
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardLike, onCardDelete, cards }) => {
+const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardLike, onCardDelete, cards}) => {
   const currentUser = React.useContext(CurrentUserContext);
 
   return (
@@ -24,7 +24,7 @@ const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardLike
       </section>
       <section className="elements">
         <ul className="elements__grid">
-          {cards?.map((card) => (
+          {cards.map((card) => (
               <Card
                 card={card}
                 key={card._id}

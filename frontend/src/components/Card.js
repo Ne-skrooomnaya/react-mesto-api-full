@@ -9,7 +9,7 @@ const Card = ({ card, onCardClick, onCardLike, onCardDelete }) => {
 
 
   const isLiked = likes.some(i => i === currentUser._id);
-  const cardLikeButtonClassName = `element__like ${isLiked ? 'element__like_active' : ''}`;
+  const cardLikeButtonClassName = `element__like ${isLiked ? 'element__like_active': ''}`;
 
   const handleClick = () => {
     onCardClick(card);
@@ -31,7 +31,7 @@ const Card = ({ card, onCardClick, onCardLike, onCardDelete }) => {
         <h2 className="element__title">{name}</h2>
         <div className="element__group-like">
           <button className={cardLikeButtonClassName} type="button" onClick={handleLikeClick}></button>
-          <p className="element__like-count">{likes.length}</p>
+          <span className="element__like-count">{likes.length}</span>
         </div>
       </div>
     </div>

@@ -42,6 +42,7 @@ const App = () => {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
   const [isInfoTooltipOpen, setInfoTooltipOpen] = useState({ opened: false, success: false })
+  const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState("");
@@ -154,14 +155,14 @@ const App = () => {
   };
 
   const handleLikeClick = (card) => {
-    const isLiked = card.likes.some((i) => i === currentUser._id);
-    api.changeLikeCardStatus(card._id, !isLiked)
-    .then((newCard) => {
-      setCards((state) =>
-        state.map((c) => (c._id === card._id ? newCard : c))
-      );
-    }).catch((err) => console.log(err));
-  }
+    const isLiked = card.likes.some(i => i === currentUser._id);
+      api.changeLikeCardStatus(card._id, !isLiked)
+      .then((newCard) => {
+        setCards((state) =>
+          state.map((c) => (c._id === card._id ? newCard : c))
+        );
+      }).catch((err) => console.log(err));
+    } 
 
   const handleDeleteClick = (card) => {
     api.deleteCard(card._id).then(() => {
@@ -187,8 +188,9 @@ const App = () => {
 
   const handleAddPlaceSubmit = (data) => {
     api.postCard(data).then((newCard) => {
-        setCards([newCard, ...cards]);
-        closeAllPopups();
+      setCards([...cards]);
+      setCards([newCard]);
+      closeAllPopups();
       }).catch((err) => console.log(err));
   }
 
@@ -197,7 +199,7 @@ const App = () => {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setIsConfirmPopupOpen(false);
-    // setIsImagePopupOpen(false);
+    setIsImagePopupOpen(false);
     setInfoTooltipOpen({ opened: false, success: isInfoTooltipOpen.success })
     setSelectedCard(null);
     setCardToDelete(null);
@@ -257,23 +259,24 @@ const App = () => {
             name="confirm"
             buttonText="Сохранить"
           /> */}
-          {/* <ImagePopup
-            isOpen={isImagePopupOpen}
-            onClose={closeAllPopups}
-            card={selectedCard}
-          /> */}
           <ConfirmDeletePopup
           isOpen={isConfirmPopupOpen}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateAvatar}
           onConfirm={handleDeleteClick}
           card={cardToDelete}
-        />
+          />
           <InfoTooltip
             isOpen={isInfoTooltipOpen.opened}
             onClose={closeAllPopups}
             statusImage={isInfoTooltipOpen.success ? okImage : failImage}
-            title={isInfoTooltipOpen.success ? "Вы успешно зарегистрировались!" : "Что-то пошло не так! Попробуйте ещё раз"} />
+            title={isInfoTooltipOpen.success ? "Вы успешно зарегистрировались!" : "Что-то пошло не так! Попробуйте ещё раз"} 
+          />
+          <ImagePopup
+            isOpen={isImagePopupOpen}
+            onClose={closeAllPopups}
+            card={selectedCard}
+          />
         </div>
       </div>
     </CurrentUserContext.Provider>

@@ -27,8 +27,7 @@ class Api {
     return fetch(`${this._baseUrl}users/me`, {
       method: 'GET',
       headers: this._headers
-    })
-      .then(this._checkResponse)
+    }).then(this._checkResponse)
   }
 
   editUserInfo(data) {
@@ -39,8 +38,7 @@ class Api {
         name: data.name,
         about: data.about
     }),
-    })
-      .then(this._checkResponse)
+    }).then(this._checkResponse)
   }
 
   editUserAvatar(data) {
@@ -49,16 +47,14 @@ class Api {
       headers: this._headers,
       body: JSON.stringify({
         avatar: data.avatar})
-})
-      .then(this._checkResponse)
+    }).then(this._checkResponse)
   }
 
   getCards() {
     return fetch(`${this._baseUrl}cards`, {
       method: 'GET',
       headers: this._headers,
-    })
-      .then(this._checkResponse)
+    }).then(this._checkResponse)
   }
 
   postCard(data) {
@@ -66,33 +62,30 @@ class Api {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify(data)
-    })
-      .then(this._checkResponse)
+    }).then(this._checkResponse);
   }
 
   deleteCard(id) {
     return fetch(`${this._baseUrl}cards/${id}`, {
       method: 'DELETE',
       headers: this._headers
-    })
-      .then(this._checkResponse)
+    }).then(this._checkResponse)
   }
 
   changeLikeCardStatus(id, isLiked) {
+    if(isLiked) {
     return fetch(`${this._baseUrl}cards/${id}/likes`, {
-      method: isLiked ? 'DELETE' : 'PUT',
+      method: 'PUT',
       headers: this._headers
     })
       .then(this._checkResponse)
+    } else {
+      return fetch(`${this._baseUrl}cards/${id}/likes`, {
+          method: 'DELETE',
+          headers: this._headers,
+      }).then(this._checkResponse);
     }
-
-// // Общий промис для отрисовки страницы
-//   getPromiseAll() {
-//     return Promise.all([
-//       this.getCards(),
-//       this.getUserInfo()
-//     ])
-//   }
+  }
 }
 
 let token = localStorage.getItem("jwt");
