@@ -35,6 +35,7 @@
 @import url(./blocks/profile/__add-button/profile__add-button.css);
 
 @import url(./blocks/elements/elements.css);
+@import url(./blocks/elements/__gridul/elements__grid.css);
 @import url(./blocks/elements/__grid/elements__grid.css);
 @import url(./blocks/element/element.css);
 @import url(./blocks/element/__title/element__title.css);

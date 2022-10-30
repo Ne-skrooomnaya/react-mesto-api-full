@@ -23,7 +23,8 @@ const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardLike
         <button type="button" className="profile__add-button" onClick={onAddPlace}></button>
       </section>
       <section className="elements">
-        <ul className="elements__grid">
+        <ul className="elements__gridul">
+          <li className="elements__grid">
           {cards.map((card) => (
               <Card
                 card={card}
@@ -34,6 +35,7 @@ const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardLike
               />
             ))
           }
+          </li>
         </ul>
       </section>
     </main>

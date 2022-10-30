@@ -14,18 +14,21 @@ const getCards = async (req, res, next) => {
   }
 };
 
-const createCard = async (req, res, next) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
-  const owner = req.user._id;
-  try {
-    const card = await Card.create({ name, link, owner });
-    return res.send({ card });
-  } catch (err) {
-    if (err.name === 'ValidationError') {
-      return next(new ErrorBad('Ошибка валидации'));
-    }
-    return next(new ErrorServer('Ошибка на сервере'));
-  }
+  Card.create({
+    name,
+    link,
+    owner: req.user._id,
+  })
+    .then((card) => res.send(card))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new ErrorBad('Переданы некорректные данные'));
+        return;
+      }
+      next(err);
+    });
 };
 
 const deleteCardId = async (req, res, next) => {

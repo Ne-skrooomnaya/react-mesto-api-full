@@ -188,8 +188,7 @@ const App = () => {
 
   const handleAddPlaceSubmit = (data) => {
     api.postCard(data).then((newCard) => {
-      setCards([...cards]);
-      setCards([newCard]);
+      setCards([newCard, ...cards]);
       closeAllPopups();
       }).catch((err) => console.log(err));
   }
