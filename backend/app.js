@@ -1,4 +1,4 @@
-// require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -12,8 +12,9 @@ const UserRoutes = require('./routes/users');
 const CardRoutes = require('./routes/cards');
 const { ErrorNot } = require('./utils/ErrorNot');
 
-const { PORT = 3001 } = process.env;
+const { PORT = 3500 } = process.env;
 const app = express();
+
 app.use(
   cors({
     origin: ['https://angel.nomoredomains.icu', 'https://api.angel.nomoredomains.icu'], // было 3000
