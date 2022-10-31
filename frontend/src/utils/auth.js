@@ -1,4 +1,4 @@
-export const baseUrl = 'http://localhost:3000';
+export const baseUrl = 'https://api.angel.nomoredomains.icu';
 
 const checkResponse = (res) => {
     if (res.ok) {

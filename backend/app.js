@@ -16,7 +16,7 @@ const { PORT = 3000 } = process.env;
 const app = express();
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'http://localhost:3001', 'https://angel.nomoredomains.icu', 'https://api.angel.nomoredomains.icu'], // было 3000
+    origin: ['https://angel.nomoredomains.icu', 'https://api.angel.nomoredomains.icu'], // было 3000
     credentials: true,
   }),
 );
