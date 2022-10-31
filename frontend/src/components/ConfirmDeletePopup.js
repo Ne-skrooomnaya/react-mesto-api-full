@@ -1,3 +1,4 @@
+import React  from 'react';
 import PopupWithForm from './PopupWithForm';
 
 const ConfirmDeletePopup = ({ isOpen, onClose, card, onConfirm }) => {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useEffect }  from 'react';
 
 import Header from "./Header";
 import Main from "./Main";
@@ -37,21 +37,21 @@ import "../index.js";
 const App = () => {
   const navigate = useNavigate();
 
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-  const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
-  const [isInfoTooltipOpen, setInfoTooltipOpen] = useState({ opened: false, success: false })
-  const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
+  const [isConfirmPopupOpen, setIsConfirmPopupOpen] = React.useState(false);
+  const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState({ opened: false, success: false })
+  const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
 
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
+  const [loggedIn, setLoggedIn] = React.useState(false);
+  const [userEmail, setUserEmail] = React.useState("");
 
-  const [selectedCard, setSelectedCard] = useState(null);
-  const [cardToDelete, setCardToDelete] = useState([]);
-  const [cards, setCards] = useState([]);
+  const [selectedCard, setSelectedCard] = React.useState(null);
+  const [cardToDelete, setCardToDelete] = React.useState([]);
+  const [cards, setCards] = React.useState([]);
 
-  const [currentUser, setCurrentUser] = useState({
+  const [currentUser, setCurrentUser] = React.useState({
     name: "Загрузка",
     about: "...",
     // avatar: avatarPreloader,
