@@ -1,5 +1,11 @@
 {
-  "dependencies": {
-    "yarn": "^1.22.19"
-  }
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "Используйте ваши предыдущие наработки по проекту Mesto. Это может быть работа 11-го спринта или его улучшенная версия после 2-х последних спринтов.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
 }
