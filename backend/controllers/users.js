@@ -139,19 +139,18 @@ const login = async (req, res, next) => {
     );
     res.cookie('jwt', token, {
       maxAge: 3600000,
-      // domain: 'angel.nomoredomains.icu',
-      domain: 'https://angel.nomoredomains.icu',
+      domain: 'angel.nomoredomains.icu',
       httpOnly: true,
       sameSite: 'none',
       secure: true,
     });
-    // res.cookie('jwt', token, {
-    //   maxAge: 3600000,
-    //   // domain: 'api.angel.nomoredomains.icu',
-    //   httpOnly: true,
-    //   sameSite: 'none',
-    //   secure: true,
-    // });
+    res.cookie('jwt', token, {
+      maxAge: 3600000,
+      domain: 'api.angel.nomoredomains.icu',
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
     return res.status(200).send({ token });
   } catch (error) {
     return next(new ErrorServer('Ошибка на сервере'));
