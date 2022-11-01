@@ -21,6 +21,7 @@ app.use(
     credentials: true,
   }),
 );
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -56,8 +57,8 @@ app.use(errors());
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
-  const message = statusCode === 500 ? 'Ошибка на сервере 3' : err.message;
-  res.status(statusCode).send({ message });
+  // const message = statusCode === 500 ? 'Ошибка на сервере 3' : err.message;
+  res.status(statusCode).send(`${err} ${req} ${res} ${next}`);
   next();
 });
 
