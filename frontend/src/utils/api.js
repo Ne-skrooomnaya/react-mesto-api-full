@@ -2,7 +2,7 @@ class Api {
   constructor({baseUrl, headers}) {
     this._baseUrl = baseUrl;
     this._headers = headers;
-    this._token = null;
+    // this._token = null;
 
   }
 
@@ -91,8 +91,8 @@ class Api {
 let token = localStorage.getItem("jwt");
 
 const api = new Api({
-  // url: 'https://api.angel.nomorepartiesxyz.ru',!!!!!
-  baseUrl: 'https://api.angel.nomoredomains.icu/',
+  // baseUrl: 'https://api.angel.nomoredomains.icu/',
+  baseUrl: 'http://api.angel.nomoredomains.icu/',
   headers: {
     authorization:  `Bearer ${token}`,
     'content-type': 'application/json'

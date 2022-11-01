@@ -139,7 +139,7 @@ const login = async (req, res, next) => {
     );
     // res.cookie('jwt', token, {
     //   maxAge: 3600000,
-    //   domain: 'angel.nomoredomains.icu',
+    //   domain: 'http://localhost:3000',
     //   httpOnly: true,
     //   sameSite: 'none',
     //   secure: true,
