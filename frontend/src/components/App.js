@@ -217,7 +217,7 @@ const App = () => {
               onEditProfile={handleEditProfileClick}
               onAddPlace={handleAddPlaceClick}
               onEditAvatar={handleEditAvatarClick}
-              onClick={handleClick}
+              handleClick={handleClick}
               onCardLike={handleLikeClick}
               onCardDelete={confirmCardDelete}
               cards={cards}
