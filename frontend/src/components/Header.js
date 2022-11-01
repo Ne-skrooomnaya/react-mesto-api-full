@@ -41,7 +41,7 @@ function Header({email, loggedIn, handleLogOut}) {
       <div className="header__container">
         {loggedIn && <p className="header__email">{email}</p>}
         <Link className="header__link" to={getButtonRoute()}>
-          <button className="header__button" onClick={handleClick}>{getButtonValue()}</button>
+          <button className="header__button" handleClick={handleLogOut}>{getButtonValue()}</button>
         </Link>
       </div>
       {/* nnm */}
