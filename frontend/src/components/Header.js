@@ -2,7 +2,7 @@ import headerLogo from '../images/mesto.svg';
 import React from 'react';
 import { useLocation, Link } from "react-router-dom";
 
-function Header({email, loggedIn, handleLogout}) {
+function Header({email, loggedIn, handleLogOut}) {
 // nn
   const location = useLocation();
 
@@ -30,7 +30,7 @@ function Header({email, loggedIn, handleLogout}) {
 
   function handleClick() {
     if (getButtonValue() === 'Выйти') {
-      handleLogout();
+      handleLogOut();
     }
   }
 // nnm
