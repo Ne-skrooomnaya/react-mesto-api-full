@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+require('dotenv').config();
+
 const { ErrorBad } = require('../utils/ErrorBad');
 const { ErrorConflict } = require('../utils/ErrorConflict');
 const { ErrorNot } = require('../utils/ErrorNot');
@@ -137,13 +139,13 @@ const login = async (req, res, next) => {
       NODE_ENV === 'production' ? JWT_SECRET : 'secret-key',
       { expiresIn: '7d' },
     );
-    // res.cookie('jwt', token, {
-    //   maxAge: 3600000,
-    //   domain: 'http://localhost:3000',
-    //   httpOnly: true,
-    //   sameSite: 'none',
-    //   secure: true,
-    // });
+    res.cookie('jwt', token, {
+      maxAge: 3600000,
+      domain: 'api.angel.nomoredomains.icu',
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
     res.cookie('jwt', token, {
       maxAge: 3600000,
       domain: 'angel.nomoredomains.icu',
