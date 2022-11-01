@@ -205,8 +205,8 @@ const App = () => {
           logo={logo} 
           userEmail={userEmail} 
           loggedIn={loggedIn} 
+          onClick={handleClick}
           handleLogOut={handleLogOut} 
-
           />
           <Routes>
             <Route path="/signup" element={<Register handleRegister={handleRegister} />} />
@@ -217,7 +217,7 @@ const App = () => {
               onEditProfile={handleEditProfileClick}
               onAddPlace={handleAddPlaceClick}
               onEditAvatar={handleEditAvatarClick}
-              handleClick={handleClick}
+              onCardClick={handleClick}
               onCardLike={handleLikeClick}
               onCardDelete={confirmCardDelete}
               cards={cards}
