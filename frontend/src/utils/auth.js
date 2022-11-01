@@ -1,4 +1,4 @@
-export const baseUrl = 'http://api.angel.nomoredomains.icu';
+export const baseUrl = 'https://api.angel.nomoredomains.icu';
 
 const checkResponse = (res) => {
     if (res.ok) {

@@ -92,7 +92,7 @@ let token = localStorage.getItem("jwt");
 
 const api = new Api({
   // baseUrl: 'https://api.angel.nomoredomains.icu/',
-  baseUrl: 'http://api.angel.nomoredomains.icu/',
+  baseUrl: 'https://api.angel.nomoredomains.icu/',
   headers: {
     authorization:  `Bearer ${token}`,
     'content-type': 'application/json'
