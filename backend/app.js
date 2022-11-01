@@ -15,7 +15,12 @@ const { ErrorNot } = require('./utils/ErrorNot');
 const { PORT = 3034 } = process.env;
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ['https://angel.nomoredomains.icu', 'https://api.angel.nomoredomains.icu'], // было 3000
+    credentials: true,
+  }),
+);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -41,7 +46,7 @@ app.get('/crash-test', () => {
 app.use('/', SignRoutes);
 app.use('/', auth, UserRoutes);
 app.use('/', auth, CardRoutes);
-app.use('*', (req, res, next) => {
+app.use('*', auth, (req, res, next) => {
   next(new ErrorNot('Страница не найдена 5'));
 });
 
