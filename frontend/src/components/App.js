@@ -66,6 +66,7 @@ const App = () => {
       Promise.all([api.getUserInfo(), api.getCards()])
       .then(([userData, userCard]) => {
         setCurrentUser(userData);
+        setUserEmail(userData.email);
         setCards(userCard);
       }).catch((err) => console.log(`Ошибка: ${err}`));
     }
@@ -123,6 +124,7 @@ const App = () => {
     localStorage.removeItem("jwt");
     navigate("/signin");
     // setCurrentUser({});
+    setUserEmail(null);
     setLoggedIn(false);
   }
 
@@ -202,7 +204,7 @@ const App = () => {
       <div className="body">
         <div className="page">
           <Header 
-          userEmail={userEmail} 
+          email={userEmail} 
           logo={logo} 
           loggedIn={loggedIn} 
           onClick={handleClick}

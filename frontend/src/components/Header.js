@@ -2,7 +2,7 @@ import headerLogo from '../images/mesto.svg';
 import React from 'react';
 import { useLocation, Link } from "react-router-dom";
 
-function Header({userEmail, loggedIn, handleLogOut}) {
+function Header({email, loggedIn, handleLogOut}) {
 // nn
   const location = useLocation();
 
@@ -31,7 +31,6 @@ function Header({userEmail, loggedIn, handleLogOut}) {
   function handleClick() {
     if (getButtonValue() === 'Выйти') {
       handleLogOut();
-      userEmail(email);
     }
   }
 // nnm
@@ -40,7 +39,7 @@ function Header({userEmail, loggedIn, handleLogOut}) {
       <img className="header__logo" src={headerLogo} alt="лого" />
       {/* nn */}
       <div className="header__container">
-        {loggedIn && <p className="header__email">{userEmail(email)}</p>}
+        {loggedIn && <p className="header__email">{email} email</p>}
         <Link className="header__link" to={getButtonRoute()}>
           <button className="header__button" onClick={handleClick}>{getButtonValue()}</button>
         </Link>
