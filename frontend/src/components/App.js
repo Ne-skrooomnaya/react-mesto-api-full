@@ -202,8 +202,8 @@ const App = () => {
       <div className="body">
         <div className="page">
           <Header 
+          userEmail={userEmail} 
           logo={logo} 
-          userEmail={email} 
           loggedIn={loggedIn} 
           onClick={handleClick}
           handleLogOut={handleLogOut} 

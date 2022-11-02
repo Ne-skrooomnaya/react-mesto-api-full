@@ -31,6 +31,7 @@ function Header({userEmail, loggedIn, handleLogOut}) {
   function handleClick() {
     if (getButtonValue() === 'Выйти') {
       handleLogOut();
+      userEmail(email);
     }
   }
 // nnm
@@ -39,7 +40,7 @@ function Header({userEmail, loggedIn, handleLogOut}) {
       <img className="header__logo" src={headerLogo} alt="лого" />
       {/* nn */}
       <div className="header__container">
-        {loggedIn && <p className="header__email">{userEmail}</p>}
+        {loggedIn && <p className="header__email">{userEmail(email)}</p>}
         <Link className="header__link" to={getButtonRoute()}>
           <button className="header__button" onClick={handleClick}>{getButtonValue()}</button>
         </Link>
