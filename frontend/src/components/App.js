@@ -203,7 +203,7 @@ const App = () => {
         <div className="page">
           <Header 
           logo={logo} 
-          userEmail={userEmail} 
+          email={userEmail} 
           loggedIn={loggedIn} 
           onClick={handleClick}
           handleLogOut={handleLogOut} 
@@ -258,6 +258,7 @@ const App = () => {
           onUpdateUser={handleUpdateAvatar}
           onConfirm={handleDeleteClick}
           card={cardToDelete}
+          name="delete"
           />
           <InfoTooltip
             isOpen={isInfoTooltipOpen.opened}

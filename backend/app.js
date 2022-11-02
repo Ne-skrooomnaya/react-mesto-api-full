@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const helmet = require('helmet');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 // const cookieParser = require('cookie-parser');
@@ -35,6 +36,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb')
 // });
 
 app.use(requestLogger);
+app.use(helmet());
 
 app.get('/crash-test', () => {
   setTimeout(() => {
