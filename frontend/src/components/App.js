@@ -203,7 +203,7 @@ const App = () => {
         <div className="page">
           <Header 
           logo={logo} 
-          email={userEmail} 
+          userEmail={email} 
           loggedIn={loggedIn} 
           onClick={handleClick}
           handleLogOut={handleLogOut} 
