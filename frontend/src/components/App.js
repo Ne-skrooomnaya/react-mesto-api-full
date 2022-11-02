@@ -260,6 +260,7 @@ const App = () => {
           onUpdateUser={handleUpdateAvatar}
           onConfirm={handleDeleteClick}
           card={cardToDelete}
+          buttonText="Да"
          />
           <InfoTooltip
             isOpen={isInfoTooltipOpen.opened}
