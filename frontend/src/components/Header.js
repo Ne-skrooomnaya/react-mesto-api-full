@@ -39,7 +39,7 @@ function Header({email, loggedIn, handleLogOut}) {
       <img className="header__logo" src={headerLogo} alt="лого" />
       {/* nn */}
       <div className="header__container">
-        {loggedIn && <p className="header__email">email</p>}
+        {loggedIn && <p className="header__email">{email}</p>}
         <Link className="header__link" to={getButtonRoute()}>
           <button className="header__button" onClick={handleClick}>{getButtonValue()}</button>
         </Link>
