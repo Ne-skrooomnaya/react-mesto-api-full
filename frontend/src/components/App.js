@@ -249,11 +249,11 @@ const App = () => {
             onClose={closeAllPopups}
             onAddPlace={handleAddPlaceSubmit}
           />
-          <PopupWithForm
+          {/* <PopupWithForm
             title="Вы уверены?"
             name="confirm"
             buttonText="Сохранить"
-          />
+          /> */}
           <ConfirmDeletePopup
           isOpen={isConfirmPopupOpen}
           onClose={closeAllPopups}
