@@ -15,7 +15,7 @@ const ConfirmDeletePopup = ({ isOpen, onClose, card, onConfirm }) => {
   isValid={true}
   name="delete"
   title="Вы уверены?"
-  titleButton="Да"
+  titleBtn="Да"
   />;
 };
 
