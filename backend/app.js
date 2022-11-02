@@ -29,10 +29,10 @@ mongoose.connect('mongodb://localhost:27017/mestodb')
   .then(() => console.log('connected'))
   .catch((err) => console.log(`Ошибка ${err.name}: ${err.message}`));
 
-app.use((req, res, next) => {
-  console.log(`${req.method}: ${req.path} ${JSON.stringify(req.body)}`);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(`${req.method}: ${req.path} ${JSON.stringify(req.body)}`);
+//   next();
+// });
 
 app.use(requestLogger);
 
